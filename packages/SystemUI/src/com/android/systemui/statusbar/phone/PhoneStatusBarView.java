@@ -25,6 +25,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.inputmethodservice.InputMethodService;
+import android.os.IBinder;
 import android.util.AttributeSet;
 import android.util.EventLog;
 import android.util.Pair;
@@ -292,6 +294,15 @@ public class PhoneStatusBarView extends PanelBar {
             for (StatusBar.ExpansionChangedListener listener : mExpansionChangedListeners) {
                 listener.onExpansionChanged(frac, expanded);
             }
+        }
+    }
+
+    @Override
+    public void setImeWindowStatus(int displayId, IBinder token, int vis, int backDisposition,
+            boolean showImeSwitcher) {
+        if (mRotationButtonController != null) {
+            final boolean imeShown = (vis & InputMethodService.IME_VISIBLE) != 0;
+            mRotationButtonController.getRotationButton().setCanShowRotationButton(!imeShown);
         }
     }
 
